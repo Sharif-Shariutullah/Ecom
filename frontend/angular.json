@@ -33,7 +33,10 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+"src/app/customer/components/dashboard/assets/carosol.js"
+
+            ]
           },
           "configurations": {
             "production": {

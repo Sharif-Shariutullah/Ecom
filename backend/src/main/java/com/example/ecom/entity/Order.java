@@ -69,4 +69,12 @@ public class Order {
     }
 
 
+
+
+
+    public Long getTotalAmount() {
+        // Ensure that totalAmount is never null by initializing it to 0L if it's null
+        return totalAmount != null ? totalAmount : 0L;
+    }
+
 }

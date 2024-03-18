@@ -26,10 +26,13 @@ export class CartComponent {
 
 
   ngOnInit(): void {
+    console.log('this.order----------------------------', this.order);
+    console.log('this.cartItems-------------', this.cartItems);
     this.couponForm = this.fb.group({
       code: [null, [Validators.required]]
     });
     this.getCart();
+
 
   }
 
@@ -55,10 +58,12 @@ export class CartComponent {
     this.cartItems = [];
     this.customerService.getCartByUserId().subscribe(res => {
       this.order = res;
+      console.log('this.order----------------------------', this.order);
 
       res.cartItems.forEach(element => {
         element.processedImg = 'data:image/jpeg;base64,' + element.returnedImg;
         this.cartItems.push(element);
+        console.log('this.cartItems-------------', this.cartItems);
       });
     })
   }

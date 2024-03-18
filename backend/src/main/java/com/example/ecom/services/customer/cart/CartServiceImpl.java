@@ -39,50 +39,102 @@ public class CartServiceImpl implements CartService {
     private CouponRepository couponRepository;
 
 
+//    public ResponseEntity<?> addProductToCart(AddProductInCartDto addProductInCartDto) {
+//
+//        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addProductInCartDto.getUserId(), OrderStatus.Pending);
+//        Optional<CartItems> optionalCartItems;
+//        if(activeOrder!=null){
+//            optionalCartItems = cartItemRepository.findByProductIdAndOrderIdAndUserId(addProductInCartDto.getProductId(), activeOrder.getId(), addProductInCartDto.getUserId());
+//        }else{
+//            optionalCartItems = cartItemRepository.findByProductIdAndUserId(addProductInCartDto.getProductId(), addProductInCartDto.getUserId());
+//        }
+//
+//
+//        if (optionalCartItems.isPresent()) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+//        } else {
+//            Optional<Product> optionalProduct = productRepository.findById(addProductInCartDto.getProductId());
+//            Optional<User> optionalUser = userRepository.findById(addProductInCartDto.getUserId());
+//
+//            if (optionalProduct.isPresent() && optionalUser.isPresent()) {
+//                CartItems cart = new CartItems();
+//                cart.setProduct(optionalProduct.get());
+//                cart.setPrice(optionalProduct.get().getPrice());
+//                cart.setQuantity(1L);
+//                cart.setUser(optionalUser.get());
+//                cart.setOrder(activeOrder);
+//
+//
+//                CartItems updatedCart = cartItemRepository.save(cart);
+//                activeOrder.setTotalAmount(activeOrder.getTotalAmount() + cart.getPrice());
+//                activeOrder.setAmount(activeOrder.getAmount() + cart.getPrice());
+//                activeOrder.getCartItems().add(cart);
+//
+//                orderRepository.save(activeOrder);
+//                return ResponseEntity.status(HttpStatus.CREATED).body(cart);
+//
+//            } else {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or product not found");
+//            }
+//        }
+//    }
+
+    //chat gpt
+
     public ResponseEntity<?> addProductToCart(AddProductInCartDto addProductInCartDto) {
-
-        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addProductInCartDto.getUserId(), OrderStatus.Pending);
-        Optional<CartItems> optionalCartItems;
-        if(activeOrder!=null){
-            optionalCartItems = cartItemRepository.findByProductIdAndOrderIdAndUserId(addProductInCartDto.getProductId(), activeOrder.getId(), addProductInCartDto.getUserId());
-        }else{
-            optionalCartItems = cartItemRepository.findByProductIdAndUserId(addProductInCartDto.getProductId(), addProductInCartDto.getUserId());
-        }
-
-
-        if (optionalCartItems.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        } else {
+//        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(addProductInCartDto.getUserId(), OrderStatus.Pending);
+//        Optional<CartItems> optionalCartItems;
+//
+//        if (activeOrder != null) {
+//            optionalCartItems = cartItemRepository.findByProductIdAndOrderIdAndUserId(
+//                    addProductInCartDto.getProductId(), activeOrder.getId(), addProductInCartDto.getUserId());
+//        } else {
+//
+//            // If there's no active order, create one
+//
+//            activeOrder = new Order();
+//            activeOrder.setUser(userRepository.findById(addProductInCartDto.getUserId())
+//                    .orElseThrow(() -> new RuntimeException("User not found")));
+//            activeOrder.setOrderStatus(OrderStatus.Pending);
+//            activeOrder = orderRepository.save(activeOrder);
+//
+//            optionalCartItems = cartItemRepository.findByProductIdAndOrderIdAndUserId(
+//                    addProductInCartDto.getProductId(), activeOrder.getId(), addProductInCartDto.getUserId());
+//        }
+//
+//        if (optionalCartItems.isPresent()) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+//        } else {
             Optional<Product> optionalProduct = productRepository.findById(addProductInCartDto.getProductId());
-            Optional<User> optionalUser = userRepository.findById(addProductInCartDto.getUserId());
 
-            if (optionalProduct.isPresent() && optionalUser.isPresent()) {
+            if (optionalProduct.isPresent()) {
                 CartItems cart = new CartItems();
                 cart.setProduct(optionalProduct.get());
                 cart.setPrice(optionalProduct.get().getPrice());
                 cart.setQuantity(1L);
-                cart.setUser(optionalUser.get());
-                cart.setOrder(activeOrder);
-
+                User user = new User();
+                user.setId(addProductInCartDto.getUserId());
+                cart.setUser(user);
+//                cart.setOrder(activeOrder);
 
                 CartItems updatedCart = cartItemRepository.save(cart);
-                activeOrder.setTotalAmount(activeOrder.getTotalAmount() + cart.getPrice());
-                activeOrder.setAmount(activeOrder.getAmount() + cart.getPrice());
-                activeOrder.getCartItems().add(cart);
 
-                orderRepository.save(activeOrder);
+                // Update activeOrder total amount
+//
+//                activeOrder.setTotalAmount(activeOrder.getTotalAmount() + cart.getPrice());
+//                orderRepository.save(activeOrder);
 
                 return ResponseEntity.status(HttpStatus.CREATED).body(cart);
-
-
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or product not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
             }
-
-        }
-
-
+//        }
     }
+
+
+
+
+
 
 
     public OrderDto getCartByUserId(Long userId) {
@@ -200,26 +252,44 @@ public class CartServiceImpl implements CartService {
     }
 
 
+//    public OrderDto placeOrder(PlaceOrderDto placeOrderDto) {
+//        Order activeOrder = orderRepository.findByUserIdAndOrderStatus(placeOrderDto.getUserId(), OrderStatus.Pending);
+//        Optional<User> optionalUser = userRepository.findById(placeOrderDto.getUserId());
+//        if (optionalUser.isPresent()) {
+//            activeOrder.setOrderDescription(placeOrderDto.getOrderDescription());
+//            activeOrder.setAddress(placeOrderDto.getAddress());
+//            activeOrder.setDate(new Date());
+//            activeOrder.setOrderStatus(OrderStatus.Placed);
+//            activeOrder.setTrackingId(UUID.randomUUID());
+//            orderRepository.save(activeOrder);
+//
+//            Order order = new Order();
+//
+//            order.setAmount(0L);
+//            order.setTotalAmount(0L);
+//            order.setDiscount(0L);
+//            order.setUser(optionalUser.get());
+//            order.setOrderStatus(OrderStatus.Pending);
+//            orderRepository.save(order);
+//
+//            return activeOrder.getOrderDto();
+//        }
+//
+//        return null;
+//    }
+
+
+//    ai
+
     public OrderDto placeOrder(PlaceOrderDto placeOrderDto) {
         Order activeOrder = orderRepository.findByUserIdAndOrderStatus(placeOrderDto.getUserId(), OrderStatus.Pending);
-        Optional<User> optionalUser = userRepository.findById(placeOrderDto.getUserId());
-        if (optionalUser.isPresent()) {
+        if (activeOrder != null) {
             activeOrder.setOrderDescription(placeOrderDto.getOrderDescription());
             activeOrder.setAddress(placeOrderDto.getAddress());
             activeOrder.setDate(new Date());
             activeOrder.setOrderStatus(OrderStatus.Placed);
             activeOrder.setTrackingId(UUID.randomUUID());
             orderRepository.save(activeOrder);
-
-            Order order = new Order();
-
-            order.setAmount(0L);
-            order.setTotalAmount(0L);
-            order.setDiscount(0L);
-            order.setUser(optionalUser.get());
-            order.setOrderStatus(OrderStatus.Pending);
-            orderRepository.save(order);
-
             return activeOrder.getOrderDto();
         }
         return null;
